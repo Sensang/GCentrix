@@ -74,8 +74,11 @@ namespace GCentrix {
         public $Name = '';
         public function __construct($ID) {
             if ($ID !== 0) {
-                
+                $this->Name = Standard::$TableData[$ID];
             }
         }
+    }
+    class Field {
+        
     }
 }

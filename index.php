@@ -7,6 +7,7 @@ Standard::GetDir("default/", true, true, ".php");
 Standard::$TableData = array();
 Standard::GetDir("client/" . strtolower(Standard::$DefaultClient) . "/", true, true, ".php");
 ?>
+
 <html>
     <head>
         <meta charset="UTF-8">
