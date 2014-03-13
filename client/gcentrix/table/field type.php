@@ -1,0 +1,21 @@
+<?php
+use GCentrix\Standard as Standard;
+Standard::$TableData["Field Type"][1] = array("'ID'", 1000010000000000035);
+Standard::$TableData["Field Type"][2] = array("'Private ID'", 1000010000000000036);
+Standard::$TableData["Field Type"][3] = array("'Big Private ID'", 1000010000000000037);
+Standard::$TableData["Field Type"][4] = array("'Manual ID'", 1000010000000000038);
+Standard::$TableData["Field Type"][5] = array("'Foreign ID'", 1000010000000000039);
+Standard::$TableData["Field Type"][6] = array("'Number'", 1000010000000000040);
+Standard::$TableData["Field Type"][7] = array("'Big Number'", 1000010000000000041);
+Standard::$TableData["Field Type"][8] = array("'Positive Number'", 1000010000000000042);
+Standard::$TableData["Field Type"][9] = array("'Big Positive Number'", 1000010000000000043);
+Standard::$TableData["Field Type"][10] = array("'Boolean'", 1000010000000000044);
+Standard::$TableData["Field Type"][11] = array("'Decimal'", 1000010000000000045);
+Standard::$TableData["Field Type"][12] = array("'Big Decimal'", 1000010000000000046);
+Standard::$TableData["Field Type"][13] = array("'Text'", 1000010000000000047);
+Standard::$TableData["Field Type"][14] = array("'Password'", 1000010000000000048);
+Standard::$TableData["Field Type"][15] = array("'Code'", 1000010000000000049);
+Standard::$TableData["Field Type"][16] = array("'Caption'", 1000010000000000050);
+Standard::$TableData["Field Type"][17] = array("'Timestamp'", 1000010000000000051);
+Standard::$TableData["Field Type"][18] = array("'Time'", 1000010000000000052);
+Standard::$TableData["Field Type"][19] = array("'Date'", 1000010000000000053);
