@@ -1,0 +1,20 @@
+<?php
+$this->SystemTables["Field Type"][0] = ['ID' => 1, 'Caption' => 'ID', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][1] = ['ID' => 2, 'Caption' => 'Private ID', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][2] = ['ID' => 3, 'Caption' => 'Big Private ID', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][3] = ['ID' => 4, 'Caption' => 'Manual ID', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][4] = ['ID' => 5, 'Caption' => 'Foreign ID', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][5] = ['ID' => 6, 'Caption' => 'Number', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][6] = ['ID' => 7, 'Caption' => 'Big Number', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][7] = ['ID' => 8, 'Caption' => 'Positive Number', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][8] = ['ID' => 9, 'Caption' => 'Big Positive Number', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][9] = ['ID' => 10, 'Caption' => 'Boolean', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][10] = ['ID' => 11, 'Caption' => 'Decimal', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][11] = ['ID' => 12, 'Caption' => 'Big Decimal', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][12] = ['ID' => 13, 'Caption' => 'Text', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][13] = ['ID' => 14, 'Caption' => 'Password', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][14] = ['ID' => 15, 'Caption' => 'Code', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][15] = ['ID' => 16, 'Caption' => 'Caption', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][16] = ['ID' => 17, 'Caption' => 'Timestamp', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][17] = ['ID' => 18, 'Caption' => 'Time', 'Value' => '1000010000000000000'];
+$this->SystemTables["Field Type"][18] = ['ID' => 19, 'Caption' => 'Date', 'Value' => '1000010000000000000'];

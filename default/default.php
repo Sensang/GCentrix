@@ -1,11 +1,12 @@
 <?php
 // use GCentrix\Standard as Standard;
 namespace GCentrix {
-    Standard::$DefaultClient = "GCentrix";
-    Standard::$Database = "GCentrix";
-    Standard::$Host = "localhost";
-    Standard::$Port = 5432;
-    Standard::$User = "GAdmin";
-    Standard::$Password = "G123";
-    Standard::$Connection = pg_connect("host=" . Standard::$Host . " port=" . Standard::$Port . " dbname=" . Standard::$Database . " user='" . Standard::$User . "' password='" . Standard::$Password . "'");
+    define("Database", "GCentrix");
+    define("Host", "localhost");
+    define("Port", 5432);
+    define("User", "postgres");
+    define("Password", "G123");
+    define("StandardPath", "Standard/");
+    define("DefaultPath", "default/");
+    define("CacheTablePath", "cache/table/");
 }
