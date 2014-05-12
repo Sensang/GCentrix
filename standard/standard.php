@@ -1,4 +1,7 @@
 <?php
+// REMINDER
+// "SELECT setval('"public"."Table_ID_seq"', (SELECT max("ID") + 1 FROM "Table"));"
+
 namespace GCentrix {
     $Tables = array();
     class Standard {
