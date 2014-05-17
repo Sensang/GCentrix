@@ -1,0 +1,20 @@
+<?php
+Database::$SystemTables["Field Type"][1] = ['ID' => 3000000000001, 'Caption' => 'ID', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][2] = ['ID' => 3000000000002, 'Caption' => 'Private ID', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][3] = ['ID' => 3000000000003, 'Caption' => 'Big Private ID', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][4] = ['ID' => 3000000000004, 'Caption' => 'Manual ID', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][5] = ['ID' => 3000000000005, 'Caption' => 'Foreign ID', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][6] = ['ID' => 3000000000006, 'Caption' => 'Number', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][7] = ['ID' => 3000000000007, 'Caption' => 'Big Number', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][8] = ['ID' => 3000000000008, 'Caption' => 'Positive Number', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][9] = ['ID' => 3000000000009, 'Caption' => 'Big Positive Number', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][10] = ['ID' => 3000000000010, 'Caption' => 'Boolean', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][11] = ['ID' => 3000000000011, 'Caption' => 'Decimal', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][12] = ['ID' => 3000000000012, 'Caption' => 'Big Decimal', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][13] = ['ID' => 3000000000013, 'Caption' => 'Text', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][14] = ['ID' => 3000000000014, 'Caption' => 'Password', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][15] = ['ID' => 3000000000015, 'Caption' => 'Code', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][16] = ['ID' => 3000000000016, 'Caption' => 'Caption', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][17] = ['ID' => 3000000000017, 'Caption' => 'Timestamp', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][18] = ['ID' => 3000000000018, 'Caption' => 'Time', 'Value' => '1000010000000000000'];
+Database::$SystemTables["Field Type"][19] = ['ID' => 3000000000019, 'Caption' => 'Date', 'Value' => '1000010000000000000'];

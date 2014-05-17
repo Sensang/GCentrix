@@ -11,7 +11,9 @@
     </head>
     <body>
         <?php
-        
+        $Field = new Table(Database::$Tables["Field"], TRUE);
+        $Field->SetValueFilter("Field Type", 1);
+        $Field->PrintTable();
         ?>
     </body>
 </html>
