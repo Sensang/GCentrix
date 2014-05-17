@@ -60,18 +60,12 @@ class Database {
     public static $StandardPath = "";
     public static $DefaultPath = "";
     public static $CustomPath = "";
-    public function __construct($Name, $Host, $Port, $User, $Password, $Cache) {
-        $this->Name = $Name;
-        $this->Host = $Host;
-        $this->Port = $Port;
-        $this->User = $User;
-        $this->Password = $Password;
-        $this->Cache = $Cache;
-        $this->Connection = pg_connect("host=" . $this->Host . " port=" . $this->Port . " dbname=" . $this->Name . " user='" . $this->User . "' password='" . $this->Password . "'", $this->Connection);
-        $this->InitSystemTableByCache("Table");
-        foreach($this->SystemTables["Table"] as $Table) {
+    public static function Initialize() {
+        self::$Connection = pg_connect("host=" . self::$Host . " port=" . self::$Port . " dbname=" . self::$Name . " user='" . self::$User . "' password='" . self::$Password . "'", self::$Connection);
+        self::InitSystemTableByCache("Table");
+        foreach(self::$SystemTables["Table"] as $Table) {
             if(($Table["ID"] != 1) &&($Table["System Table"] == 1)) {
-                $this->InitSystemTableByCache($Table["Name"]);
+                self::InitSystemTableByCache($Table["Name"]);
             }
         }
         foreach (self::$SystemTables["Table"] as $Table) {
@@ -104,7 +98,7 @@ class Database {
                         $Fields[$SubKey] = pg_field_type($Result, $Counter);
                         $Counter++;
                     }
-                    $this->FormatValueByType($Tables[$Key][$SubKey], $Fields[$SubKey]);
+                    self::FormatValueByType($Tables[$Key][$SubKey], $Fields[$SubKey]);
                 }
             }
         }
@@ -118,7 +112,7 @@ class Database {
         } else {
             foreach($Tables as $Key => $Data) {
                 foreach($Data as $SubKey => $SubData) {
-                    $this->FormatValueByType($Tables[$Key][$SubKey], $Fields["Field Type"]);
+                    self::FormatValueByType($Tables[$Key][$SubKey], $Fields["Field Type"]);
                 }
             }
         }
