@@ -7,3 +7,4 @@ Database::$Password = "G123";
 Database::$StandardPath = "Standard/";
 Database::$DefaultPath = "default/";
 Database::$CachePath = "cache/";
+Database::$TableIDOffset = 1000000000000;

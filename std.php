@@ -1,13 +1,6 @@
 <?php
 // REMINDER
 // "SELECT setval('"public"."Table_ID_seq"',(SELECT max("ID") + 1 FROM "Table"));"
-
-function Get($VarName) {
-    if (!isset(self::$Variables[$VarName])) {
-        self::$Variables[$VarName] = new $VarName();
-    }
-    return self::$Variables[$VarName];
-}
 function AddDir($Filepath, $RemoveDefault, $Directories, $OnlyExt) {
     if ($Filepath[strlen($Filepath) - 1] != "/")
     {
@@ -53,13 +46,15 @@ class Database {
     public static $User = "";
     public static $Password = "";
     public static $Connection;
-    public static $Field = array();
+    public static $Field;
+    public static $TableRelation;
     public static $SystemTables = array();
     public static $Tables = array();
     public static $CachePath = "";
     public static $StandardPath = "";
     public static $DefaultPath = "";
     public static $CustomPath = "";
+    public static $TableIDOffset = 0;
     public static function Initialize() {
         self::$Connection = pg_connect("host=" . self::$Host . " port=" . self::$Port . " dbname=" . self::$Name . " user='" . self::$User . "' password='" . self::$Password . "'", self::$Connection);
         self::InitSystemTableByCache(1, "Table");
@@ -71,11 +66,52 @@ class Database {
         foreach (self::$SystemTables["Table"] as $Key=>$Table) {
             self::$Tables[$Table["Name"]] = $Key;
         }
-        self::$Field = new Table(self::$Tables["Field"], FALSE);
-        $Fields = self::PGFetchAllWithFormat("SELECT * FROM \"Field\" WHERE \"Table\"='" . self::$SystemTables["Table"][self::$Tables["Field"]]["ID"] . "'");
+        /*self::$Field = new Table(self::$Tables["Field"], FALSE);
+        $Fields = self::PGFetchAllWithFormat("SELECT * FROM \"Field\" WHERE \"Table\"='" . (self::$TableIDOffset + self::$Tables["Field"]) . "'");
         foreach ($Fields as $Field) {
             self::$Field->Meta->Fields[$Field["Name"]] = new Field($Field);
         }
+        $TableRelations = self::PGFetchAllWithFormat(
+            "SELECT \"Field\".\"Name\"  AS \"From Field\", " .
+                   "\"Table\".\"Name\"  AS \"To Table\", " .
+                   "\"Field2\".\"Name\" AS \"To Field\" " .
+            "FROM   \"Table Relation\" " .
+                   "LEFT JOIN \"Field\" " .
+                          "ON \"Field\".\"ID\" = \"Table Relation\".\"From Field\" " .
+                   "LEFT JOIN \"Table\" " .
+                          "ON \"Table\".\"ID\" = \"Table Relation\".\"To Table\" " .
+                   "LEFT JOIN \"Field\" AS \"Field2\" " .
+                          "ON \"Field2\".\"ID\" = \"Table Relation\".\"To Field\" " .
+            "WHERE  \"From Table\" = '" . (self::$TableIDOffset + self::$Tables["Field"]) . "'");
+        foreach ($TableRelations as $TableRelation) {
+            self::$Field->Meta->TableRelations[$TableRelation["From Field"]] = new TableRelation($TableRelation);
+        }
+        self::$TableRelation = new Table(self::$Tables["Table Relation"], FALSE);
+        $Fields = self::PGFetchAllWithFormat("SELECT * FROM \"Field\" WHERE \"Table\"='" . (self::$TableIDOffset + self::$Tables["Table Relation"]) . "'");
+        foreach ($Fields as $Field) {
+            self::$TableRelation->Meta->Fields[$Field["Name"]] = new Field($Field);
+        }
+        $TableRelations = self::PGFetchAllWithFormat(
+            "SELECT \"Field\".\"Name\"  AS \"From Field\", " .
+                   "\"Table\".\"Name\"  AS \"To Table\", " .
+                   "\"Field2\".\"Name\" AS \"To Field\" " .
+            "FROM   \"Table Relation\" " .
+                   "LEFT JOIN \"Field\" " .
+                          "ON \"Field\".\"ID\" = \"Table Relation\".\"From Field\" " .
+                   "LEFT JOIN \"Table\" " .
+                          "ON \"Table\".\"ID\" = \"Table Relation\".\"To Table\" " .
+                   "LEFT JOIN \"Field\" AS \"Field2\" " .
+                          "ON \"Field2\".\"ID\" = \"Table Relation\".\"To Field\" " .
+            "WHERE  \"From Table\" = '" . (self::$TableIDOffset + self::$Tables["Table Relation"]) . "'");
+        foreach ($TableRelations as $TableRelation) {
+            self::$$TableRelation->Meta->TableRelations[$TableRelation["From Field"]] = new TableRelation($TableRelation);
+        }*/
+    }
+    public static function ExtractID($ID) {
+        return $ID % self::$TableIDOffset;
+    }
+    public static function ExtractTableID($ID) {
+        return ($ID - self::ExtractID($ID)) / self::$TableIDOffset + self::$TableIDOffset;
     }
     public static function FormatValueByType(&$Value, $Type) {
         switch ($Type) {
@@ -134,8 +170,6 @@ class Database {
         return $Tables;
     }
     private function InitSystemTableByCache($ID, $Name) {
-        // TODO - SECURITY
-        // EVALUATE CACHE FILE FIRST?
         include self::$CachePath . "/table/$Name.php";
         if (!isset(self::$SystemTables[$Name])) {
             $File = fopen(self::$CachePath . "table/$Name.php", "w");
@@ -143,7 +177,7 @@ class Database {
             if ($Tables != FALSE) {
                 $CacheText = "<?php\r\n";
                 foreach ($Tables as $Data) {
-                    $CacheText .= 'Database::$SystemTables["' . $Name .'"][' .($Data["ID"] - $ID * 1000000000000) . '] = [';
+                    $CacheText .= 'Database::$SystemTables["' . $Name .'"][' .($Data["ID"] - $ID * Database::$TableIDOffset) . '] = [';
                     foreach ($Data as $SubKey => $SubData) {
                         if ($SubKey != "ID") {
                             $CacheText .= ", ";
@@ -168,6 +202,9 @@ class Database {
             require_once self::$CachePath . "table/$Name.php";
             }
         }
+    }
+    public static function PGQuery($Query) {
+        return pg_query(self::$Connection, $Query);
     }
 }
 class Debug {
@@ -231,7 +268,7 @@ class Table {
         echo "</table>";
     }
     public function Initialization() {
-        Database::$Field->SetValueFilter("Table", $this->Meta->ID + 1000000000000);
+        Database::$Field->SetValueFilter("Table", $this->Meta->ID + Database::$TableIDOffset);
         Database::$Field->Query();
         do {
             $this->Meta->Fields[Database::$Field->Name] = new Field(["ID"=>Database::$Field->ID, "Name"=>Database::$Field->Name, "Field Type"=>Database::$Field->{"Field Type"}]);
@@ -261,18 +298,22 @@ class Table {
         $this->Meta->Queried = FALSE;
     }
     public function Last() {
-        return $this->Step(-1);
+        if (!$this->Meta->Queried) {
+            $this->Query();
+        }
+        return $this->Step(count($this->Meta->Data));
     }
     public function Next() {
         return $this->Step(1);
     }
     public function First() {
+        if (!$this->Meta->Queried) {
+            $this->Query();
+        }
         return $this->Step(-$this->Meta->Pointer);
     }
     public function Step($Number) {
-        if (!$this->Meta->Queried) {
-            return $this->Query();
-        } else if (isset($this->Meta->Data[$this->Meta->Pointer + $Number])) {
+        if (($this->Meta->Queried) && (isset($this->Meta->Data[$this->Meta->Pointer + $Number]))) {
             $this->SetPointer($this->Meta->Pointer + $Number);
             return TRUE;
         }
@@ -285,7 +326,16 @@ class Table {
         }
     }
     public function Query() {
+        $Counter = 0;
+        $FieldString = "";
         $FilterString = "";
+        $JoinString = "";
+        foreach ($this->Meta->Fields as $Field) {
+            if ($FieldString != "") {
+                $FieldString .= ", ";
+            }
+            $FieldString .= $Field->Name;
+        }
         foreach ($this->Meta->Filters as $Key=>$Filter) {
             if (isset($Filter[0])) {
                 if ($FilterString == "") {
@@ -307,12 +357,12 @@ class Table {
                 }
             }
         }
-        $this->Meta->Data = Database::PGFetchAllWithFieldType("SELECT * FROM \"{$this->Meta->Name}\"$FilterString ORDER BY \"ID\"", $this->Meta->Fields);
+        $this->Meta->Data = Database::PGFetchAllWithFieldType("SELECT $FieldString FROM \"{$this->Meta->Name}\"$JoinString$FilterString ORDER BY \"ID\"", $this->Meta->Fields);
         if (!$this->Meta->Data) {
             return FALSE;
         }
         $this->Meta->Queried = TRUE;
-        $this->Step(0);
+        $this->First();
         return TRUE;
     }
 }
@@ -324,6 +374,17 @@ class Field {
         $this->ID = $Field["ID"];
         $this->Name = $Field["Name"];
         $this->Type = $Field["Field Type"];
+    }
+}
+class TableRelation {
+    public $FromTable;
+    public $FromField;
+    public $ToTable;
+    public $ToField;
+    public function __construct($TableRelation) {
+        foreach ($TableRelation as $Key=>$Property) {
+            $this->$Key = $Property;
+        }
     }
 }
 class Meta {
