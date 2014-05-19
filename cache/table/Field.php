@@ -21,7 +21,6 @@ Database::$SystemTables["Field"][19] = ['ID' => 2000000000019, 'Name' => 'From T
 Database::$SystemTables["Field"][20] = ['ID' => 2000000000020, 'Name' => 'To Field', 'Field Type' => 5, 'Table' => 1000000000005, 'Caption' => 0];
 Database::$SystemTables["Field"][21] = ['ID' => 2000000000021, 'Name' => 'To Table', 'Field Type' => 5, 'Table' => 1000000000005, 'Caption' => 0];
 Database::$SystemTables["Field"][22] = ['ID' => 2000000000022, 'Name' => 'ID', 'Field Type' => 1, 'Table' => 1000000000010, 'Caption' => 0];
-Database::$SystemTables["Field"][23] = ['ID' => 2000000000023, 'Name' => 'Language', 'Field Type' => 5, 'Table' => 1000000000010, 'Caption' => 0];
 Database::$SystemTables["Field"][24] = ['ID' => 2000000000024, 'Name' => 'Caption', 'Field Type' => 16, 'Table' => 1000000000010, 'Caption' => 0];
 Database::$SystemTables["Field"][25] = ['ID' => 2000000000025, 'Name' => 'ID', 'Field Type' => 1, 'Table' => 1000000000100, 'Caption' => 0];
 Database::$SystemTables["Field"][26] = ['ID' => 2000000000026, 'Name' => 'Default Language', 'Field Type' => 5, 'Table' => 1000000000100, 'Caption' => 0];
