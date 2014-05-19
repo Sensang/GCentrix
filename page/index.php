@@ -11,6 +11,8 @@
     </head>
     <body>
         <?php
+        $Field = new Table("Field");
+        $Field->PrintTable();
         ?>
     </body>
 </html>
