@@ -68,7 +68,7 @@ class Database {
             self::$Tables[$Table["Name"]] = $Key;
         }
         self::$Field = new Table("Field");
-        $Fields = self::PGFetchAllWithFormat("SELECT * FROM \"Field\" WHERE \"Table\"='" . (self::$TableIDOffset + self::$Tables["Field"]) . "'");
+        $Fields = self::PGFetchAllWithFormat("SELECT * FROM \"Field\" WHERE \"Table\"='" . (self::$TableIDOffset + self::$Tables["Field"]) . "' ORDER BY \"ID\"");
         foreach ($Fields as $Field) {
             self::$Field->Meta->Fields[$Field["Name"]] = new Field($Field);
         }
@@ -86,10 +86,12 @@ class Database {
                           "ON \"Table2\".\"ID\" = \"Table Relation\".\"To Table\" " .
                    "LEFT JOIN \"Field\" AS \"Field2\" " .
                           "ON \"Field2\".\"ID\" = \"Table Relation\".\"To Field\" " .
-            "WHERE  \"From Table\" = '" . (self::$TableIDOffset + self::$Tables["Field"]) . "'");
+            "WHERE  \"Table Relation\".\"From Table\" = '" . (self::$TableIDOffset + self::$Tables["Field"]) . "' " .
+            "ORDER BY \"Table Relation\".\"ID\"");
         foreach ($TableRelations as $TableRelation) {
             self::$Field->Meta->TableRelations[$TableRelation["From Field"]] = new TableRelation($TableRelation);
         }
+        
         self::$TableRelation = new Table("Table Relation");
         $Fields = self::PGFetchAllWithFormat("SELECT * FROM \"Field\" WHERE \"Table\"='" . (self::$TableIDOffset + self::$Tables["Table Relation"]) . "'");
         foreach ($Fields as $Field) {
@@ -109,7 +111,8 @@ class Database {
                           "ON \"Table2\".\"ID\" = \"Table Relation\".\"To Table\" " .
                    "LEFT JOIN \"Field\" AS \"Field2\" " .
                           "ON \"Field2\".\"ID\" = \"Table Relation\".\"To Field\" " .
-            "WHERE  \"From Table\" = '" . (self::$TableIDOffset + self::$Tables["Table Relation"]) . "'");
+            "WHERE  \"Table Relation\".\"From Table\" = '" . (self::$TableIDOffset + self::$Tables["Table Relation"]) . "' " .
+            "ORDER BY \"Table Relation\".\"ID\"");
         foreach ($TableRelations as $TableRelation) {
             self::$TableRelation->Meta->TableRelations[$TableRelation["From Field"]] = new TableRelation($TableRelation);
         }
@@ -136,10 +139,7 @@ class Database {
                     $Value = FALSE;
                 }
                 break;
-            case 13:
-            case 14:
-            case 15:
-            case "bpchar":
+            default:
                 $Value = trim($Value);
                 break;
         }
@@ -178,9 +178,9 @@ class Database {
         return $Tables;
     }
     private function InitSystemTableByCache($ID, $Name) {
-        include self::$CachePath . "/table/$Name.php";
+        include self::$CachePath . "/tabledata/$Name.php";
         if (!isset(self::$SystemTables[$Name])) {
-            $File = fopen(self::$CachePath . "table/$Name.php", "w");
+            $File = fopen(self::$CachePath . "tabledata/$Name.php", "w");
             $Tables = self::PGFetchAllWithFormat("SELECT * FROM \"$Name\" ORDER BY \"ID\"");
             if ($Tables != FALSE) {
                 $CacheText = "<?php\r\n";
@@ -207,7 +207,7 @@ class Database {
                 }
                 fwrite($File, $CacheText);
                 fclose($File);
-                require_once self::$CachePath . "table/$Name.php";
+                require_once self::$CachePath . "tabledata/$Name.php";
             }
         }
     }
@@ -235,6 +235,7 @@ class Table {
         $this->Meta->Name = $Name;
         $this->Meta->Filters = array();
         $this->Meta->Fields = array();
+        $this->Meta->TableRelations = array();
         $this->Meta->Data = array();
         $this->Meta->Pointer = 0;
         $this->Meta->Queried = FALSE;
@@ -248,11 +249,22 @@ class Table {
         do {
             $this->Meta->Fields[Database::$Field->Name] = new Field(["ID"=>Database::$Field->ID, "Name"=>Database::$Field->Name, "Field Type"=>Database::$Field->{"Field Type"}]);
         } while (Database::$Field->Next());
-        
-        Database::$TableRelation->setValueFilter("From Table", $this->Meta->ID);
+                
+        Database::$TableRelation->setValueFilter("From Table", $this->Meta->ID + Database::$TableIDOffset);
         if (Database::$TableRelation->First()) {
             do {
-                $this->Meta->$TableRelations[Database::$TableRelations->{"From Field"}] = new TableRelation(["ID"=>Database::$Field->ID, "Name"=>Database::$Field->Name, "Field Type"=>Database::$Field->{"Field Type"}]);
+                if (Database::$TableRelation->{"To Field"} != "") {
+                    $this->Meta->TableRelations[Database::$TableRelation->{"From Field"}] = 
+                        new TableRelation([ "From Table" => Database::$TableRelation->{"From Table"}, 
+                                            "From Field" => Database::$TableRelation->{"From Field"}, 
+                                            "To Table" => Database::$TableRelation->{"To Table"}, 
+                                            "To Field" => Database::$TableRelation->{"To Field"}]);
+                } else {
+                    $this->Meta->TableRelations[Database::$TableRelation->{"From Field"}] = 
+                        new TableRelation([ "From Table" => Database::$TableRelation->{"From Table"}
+                                          , "From Field" => Database::$TableRelation->{"From Field"}
+                                          , "To Table"   => Database::$TableRelation->{"To Table"}]);
+                }
             } while (Database::$Field->Next());
         }
     }
@@ -355,12 +367,16 @@ class Table {
             if (isset($this->Meta->TableRelations[$Field->Name])) {
                 $Counter++;
                 if ($Field->{"Type"} == 5) {
-                    $FieldString .= "\"" . $this->Meta->TableRelations[$Field->Name]->{"To Table"} . "$Counter\".\"" . $this->Meta->TableRelations[$Field->Name]->{"To Field"}  . "\"";
+                    $FieldString .= "\"" . $this->Meta->TableRelations[$Field->Name]->{"To Table"} . "$Counter\".\"" . $this->Meta->TableRelations[$Field->Name]->{"To Field"}  . "\" AS \"$Field->Name\"";
+                    $FieldString .= ", (SELECT "
+                                    . "\"Field TypeAA" . $Counter . "\".\"Name\" AS \"To Field Type\" FROM \"Field\" AS \"FieldAA" . $Counter . "\""
+                                    . "LEFT JOIN \"Field Type\" AS \"Field TypeAA" . $Counter . "\""
+                                    . "ON \"Field TypeAA" . $Counter . "\".\"ID\"=\"FieldAA" . $Counter . "\".\"Field Type\" LIMIT 1)";
                     $JoinString .= " LEFT JOIN "
                                 . "\"" . $this->Meta->TableRelations[$Field->Name]->{"To Table"} . "\" AS \"" . $this->Meta->TableRelations[$Field->Name]->{"To Table"} . "$Counter\" "
                                 . "ON \"" . $this->Meta->TableRelations[$Field->Name]->{"To Table"} . "$Counter\".\"ID\" = \"{$this->Meta->Name}\".\"$Field->Name\"";
                 } else if ($Field->{"Type"} == 16) {
-                    $FieldString .= "\"" . $this->Meta->TableRelations[$Field->Name]->{"To Table"} . "$Counter\".\"Caption\"";
+                    $FieldString .= "\"" . $this->Meta->TableRelations[$Field->Name]->{"To Table"} . "$Counter\".\"Caption\" AS \"$Field->Name\"";
                     $JoinString .= " LEFT JOIN "
                                 . "\"" . $this->Meta->TableRelations[$Field->Name]->{"To Table"} . "\" AS \"" . $this->Meta->TableRelations[$Field->Name]->{"To Table"} . "$Counter\" "
                                 . "ON \"" . $this->Meta->TableRelations[$Field->Name]->{"To Table"} . "$Counter\".\"ID\" = \"{$this->Meta->Name}\".\"Caption\"";
@@ -390,7 +406,7 @@ class Table {
                 }
             }
         }
-        $this->Meta->Data = Database::PGFetchAllWithFieldType("SELECT $FieldString FROM \"{$this->Meta->Name}\"$JoinString$FilterString ORDER BY \"ID\"", $this->Meta->Fields);
+        $this->Meta->Data = Database::PGFetchAllWithFieldType("SELECT $FieldString FROM \"{$this->Meta->Name}\"$JoinString$FilterString ORDER BY \"{$this->Meta->Name}\".\"ID\"", $this->Meta->Fields);
         if (!$this->Meta->Data) {
             return FALSE;
         }
@@ -408,10 +424,6 @@ class Field {
     }
 }
 class TableRelation {
-    public $FromTable;
-    public $FromField;
-    public $ToTable;
-    public $ToField;
     public function __construct($TableRelation) {
         foreach ($TableRelation as $Key=>$Property) {
             $this->$Key = $Property;
