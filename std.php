@@ -64,6 +64,7 @@ class Database {
                 self::InitSystemTableByCache($Key, $Table["Name"]);
             }
         }
+        
         foreach (self::$SystemTables["Table"] as $Key=>$Table) {
             self::$Tables[$Table["Name"]] = $Key;
         }
