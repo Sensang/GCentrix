@@ -38,6 +38,9 @@ function GetDir($Filepath, $Require, $Directories, $OnlyExt) {
         }
     }
 }
+function CreateCacheForTable() {
+    
+}
 class Database {
     public static $Name = "";
     public static $Database = "";

@@ -1,62 +1,66 @@
 html {
-    background-color: #eaeaea;
+    background-color: #f7f7f7;
 }
 body {
     margin: 0px;
 }
 #Content {
     margin: auto;
-    width: 1000px;
+    width: 900px;
     height: 100%;
-    color: #212121;
+    color: #363636;
 }
 .Step {
-    position: absolute;
-    top: 10%;
-    font-family: impact;  
+    position: relative;
+    font-family: Oswald;
     font-size: 30px;
     text-align: center;
-    width: 1000px;
+    width: 100%;
+    height: 500px;
+    padding-top: 100px;
 }
 .SubStep {
     position: relative;
     height: 50px;
 }
-#Step1 {
-    top: 35%;
+.Headline {
+    padding-bottom: 50px;
 }
-#Step2 {
-    top: 25%;
+.Highlight {
+    font-weight: bold;
+}
+.Blue {
+    color: #3278bf;
+}
+.Red {
+    color: #800000;
 }
 Label {
     display: inline-block;
     float: left;
-    margin-left: 270px;
+    margin-left: 160px;
     text-align: left;
-    width: 200px;
+    width: 250px;
+    height: 50px;
+    overflow: hidden;
 }
 input[type="text"], input[type="password"] {
+    font-size: 20px;
     float: left;
     margin-left: 80px;
-    margin-top: 5px;
-    height: 30px;
-    width: 200px;
-}
-
-#ControlArea {
-    position: absolute;
-    bottom: 40%;
-    margin: auto;
+    margin-top: 10px;
+    height: 35px;
+    width: 250px;
 }
 button {
-    font-family: impact;
+    font-family: Oswald;
+    font-weight: bold;
     width: 240px;
     height : 120px;
     font-size: 30px;
-    position: absolute;
 }
 #Previous {
-    left: 230px;
+    margin-left: 20%;
 }
 .GreyedOut {
     border: #888888 solid 1px;
@@ -69,7 +73,37 @@ button {
     color: #ffffff;
 }
 #Next {
-    left: 530px;
+    margin-left: 60px;
+    border: #6666ff solid 1px;
+    background-color: #3278bf;
+    color: #ffffff;
+}
+#ProgressArea {
+    margin-left: 50px;
+    margin-right: 50px;
+}
+.ProgressBar {
+    display: inline-block;
+    float: left;
+    height: 85px;
+    width: 180px;
+    margin-top: 100px;
+    margin-left: 15px;
+    text-align: center;
+    font-size: 30px;
+    font-family: Oswald;
+    font-weight: bold;
+    padding-top: 35px
+}
+.Todo {
+    border: #888888 solid 1px;
+    background-color: #c3c3c3;
+}
+.Active {
+    border: #888888 solid 1px;
+    background-color: #f7f7f7;    
+}
+.Done {
     border: #6666ff solid 1px;
     background-color: #3278bf;
     color: #ffffff;
