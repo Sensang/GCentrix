@@ -1,6 +1,4 @@
 <?php
-echo "test1235";/*
-$Connection = pg_connect("host={$_GET["Server"]} port={$_GET["Port"]} dbname='{$_GET["Database"]}' user='{$_GET["User"]}' password='{$_GET["Password"]}'");
 pg_query($Connection,
 "SET statement_timeout = 0;
  SET lock_timeout = 0;
@@ -376,4 +374,4 @@ pg_query($Connection,
      ADD CONSTRAINT \"Table Relation_pkey\" PRIMARY KEY (\"ID\");
 
  ALTER TABLE ONLY \"Table\"
-     ADD CONSTRAINT \"Table_pkey\" PRIMARY KEY (\"ID\");");*/
+     ADD CONSTRAINT \"Table_pkey\" PRIMARY KEY (\"ID\");");

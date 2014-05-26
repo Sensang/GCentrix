@@ -38,7 +38,7 @@ function GetDir($Filepath, $Require, $Directories, $OnlyExt) {
         }
     }
 }
-function CreateCacheForTable() {
+function CreateCacheForTable($Table) {
     
 }
 class Database {

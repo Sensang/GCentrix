@@ -83,14 +83,14 @@
                 </div>
             </div>
             <div id="ControlArea" action="data/" method="post">
-                <button type="Button" id="Previous" class="GreyedOut" disabled>Previous</button>
-                <button type="Button" id="Next">Start</button>
+                <button id="Control" type="Button" id="Previous" class="GreyedOut" disabled>Previous</button>
+                <button id="Control" type="Button" id="Next">Start</button>
             </div>
             <div id="ProgressArea">
                 <?php
-                echo "<div class=\"ProgressBar Active\" id=\"ProgressBar1\">Step 1</div>";
+                echo "<button class=\"ProgressBar Active\" id=\"ProgressBar1\">Step 1</div>";
                 for($Counter = 2; $Counter < ($NumberOfInitSteps + 1); $Counter++) {
-                    echo "<div class=\"ProgressBar Todo\" id=\"ProgressBar$Counter\">Step $Counter</div>";
+                    echo "<button class=\"ProgressBar Todo\" id=\"ProgressBar$Counter\">Step $Counter</div>";
                 }
                 ?>
             </div>

@@ -1,9 +1,18 @@
 var Steps = 1;
 var AllowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_ ";
 $(document).ready(function(){
+    function SetSteps(NewSteps) {
+        // for (Counter = 0; Steps)
+        $("#Step" + Steps).hide();
+        $("#ProgressBar" + Steps).addClass("Done");
+        $("#ProgressBar" + Steps).removeClass("Active");
+        Steps = NewSteps;
+        $("#Step" + Steps).show();
+        $("#ProgressBar" + Steps).addClass("Active");
+    }
     $("#Next").click(function(){
         if (Steps === NumberOfInitSteps) {
-            $.get("data.php?Server="   + $('input[name="Server"]').value +
+            $.get("install.php?Server="   + $('input[name="Server"]').value +
                                 "&Port="     + $('input[name="Port"]').value +
                                 "&Database=" + $('input[name="Database"]').value +
                                 "&User="     + $('input[name="User"]').value +
@@ -12,6 +21,7 @@ $(document).ready(function(){
                                     alert("Data: " + data + "\nStatus: " + status);                                    
                                 });
         } else {
+            Steps = NewSteps;
             $("#Step" + Steps).hide();
             $("#ProgressBar" + Steps).addClass("Done");
             $("#ProgressBar" + Steps).removeClass("Active");

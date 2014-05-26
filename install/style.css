@@ -78,6 +78,7 @@ button {
     background-color: #3278bf;
     color: #ffffff;
 }
+
 #ProgressArea {
     margin-left: 50px;
     margin-right: 50px;
@@ -93,7 +94,7 @@ button {
     font-size: 30px;
     font-family: Oswald;
     font-weight: bold;
-    padding-top: 35px
+    padding: 35px
 }
 .Todo {
     border: #888888 solid 1px;
